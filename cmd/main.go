@@ -2,6 +2,7 @@ package main
 
 import (
 	//"fmt"
+	"html/template"
 	"net/http"
 	"os"
 )
@@ -11,13 +12,36 @@ import (
 //var thinksInteger int
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("<h1>Hello World!</h1>"))
+	t, err := template.ParseFiles("../web/template/index.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	data := struct {
+		Title         string
+		FoodInteger   int
+		ClothInteger  int
+		ThinksInteger int
+	}{
+		Title:         "storinka",
+		FoodInteger:   5,
+		ClothInteger:  8,
+		ThinksInteger: 7,
+	}
+
+	err = t.Execute(w, data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 }
 
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "3000"
+		port = "5500"
 	}
 
 	mux := http.NewServeMux()
