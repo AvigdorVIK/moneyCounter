@@ -43,7 +43,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func dbconect() {
-	db, err := sql.Open("mysql", "viktor:260519(host:port)/moneyCounter")
+	db, err := sql.Open("mysql", "viktor:***(localhost:5500)/moneyCounter")
 	if err != nil {
 		log.Fatal(err)
 	}
