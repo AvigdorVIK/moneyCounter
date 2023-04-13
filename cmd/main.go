@@ -3,6 +3,7 @@ package main
 import (
 	//"fmt"
 	"database/sql"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -11,9 +12,25 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-//var foodInteger int
-//var clothInteger int
-//var thinksInteger int
+func submitHandler(w http.ResponseWriter, r *http.Request) {
+	// Получаем данные из формы
+	food := r.FormValue("food")
+	cloth := r.FormValue("cloth")
+	thinks := r.FormValue("thinks")
+
+	db, err := sql.Open("mysql", "vik:000(localhost:3306)(127.0.0.1:3306)/moneyCount")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	_, err = db.Exec("INSERT INTO moneyCount (foodInteger, clotherInteger, thinksInteger) VALUES (?, ?, ?)", food, cloth, thinks)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Fprintf(w, "Данные успешно получены на сервере!")
+}
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("../web/template/index.html")
@@ -43,7 +60,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func dbconect() {
-	db, err := sql.Open("mysql", "viktor:***(localhost:5500)/moneyCounter")
+	db, err := sql.Open("mysql", "vik:000(localhost:3306)/moneyCount")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -78,19 +95,14 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "5500"
+		port = "5501"
 	}
 
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", indexHandler)
+	mux.HandleFunc("/submit", submitHandler)
 	http.ListenAndServe(":"+port, mux)
-
-	//fmt.Println("Введіть кошти витрачені на їжу, одяг та речі через ентер")
-	//fmt.Scan(&foodInteger)
-	//fmt.Scan(&clothInteger)
-	//fmt.Scan(&thinksInteger)
-	//fmt.Println("Ви витратили ", foodInteger+clothInteger+thinksInteger, "Гривень за сьогодні")
 	dbconect()
 
 }
