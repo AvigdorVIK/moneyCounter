@@ -4,13 +4,33 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/staylesl.css">
     <title>{{.Title}}</title>
 </head>
 <body>
-    <h1>{{.FoodInteger}}</h1>
-    <h1>{{.ClothInteger}}</h1>
-    <h1>{{.ThinksInteger}}</h1>
-    
+    <div class="header">
+    <h1>Mony Counter</h1>
+	</div>
+
+    <div class="input">
+	<form>
+		<label for="input1">Food:</label>
+		<input type="text" id="input1"><br>
+
+		<label for="input2">Cloth:</label>
+		<input type="text" id="input2"><br>
+
+        <label for="input3">Thinks:</label>
+		<input type="text" id="input3"><br>
+    </form>
+    </div>  
+
+    <div class="output">
+		<button type="button" onclick="showOutput()">Показать информацию</button>
+	
+
+	<p id="output"></p>
+    </div>
     
 </body>
 </html>
